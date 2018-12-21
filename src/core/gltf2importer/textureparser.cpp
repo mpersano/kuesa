@@ -82,6 +82,7 @@ bool TextureParser::parse(const QJsonArray &texturesArray, GLTF2Context *context
                 textureLoader->setSource(image.url);
             } else {
                 texture2d.reset(new Qt3DRender::QTexture2D);
+                texture2d->setFormat(Qt3DRender::QAbstractTexture::RGBA8_UNorm);
 
                 auto *textureImage = sharedImages.value(image.url);
                 if (textureImage == nullptr) {
