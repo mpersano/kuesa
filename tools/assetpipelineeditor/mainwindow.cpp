@@ -240,7 +240,7 @@ void MainWindow::setCamera(int index)
     m_camera->setPosition(QVector3D(0.0f, 0.0f, 7.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
-    m_camera->viewAll();
+    viewAll();
 }
 
 void MainWindow::setCamera(const QString &name)
@@ -258,8 +258,15 @@ void MainWindow::setCamera(const QString &name)
 
 void MainWindow::viewAll()
 {
-    if (m_camera && m_activeCamera == -1)
-        m_camera->viewAll();
+    if (!m_camera || m_activeCamera != -1)
+        return;
+
+    m_camera->viewAll();
+    QVector3D position = m_camera->position();
+    QVector3D viewCenter = m_camera->viewCenter();
+    float sceneExtent = 2.0 * (viewCenter - position).length();
+    m_camera->setFarPlane(10.0f * sceneExtent); // add some headroom to be able to zoom out
+    m_camera->setNearPlane(0.001 * sceneExtent);
 }
 
 int MainWindow::activeCamera() const
