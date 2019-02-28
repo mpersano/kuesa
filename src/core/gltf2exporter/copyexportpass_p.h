@@ -1,5 +1,5 @@
 /*
-    gltf2uri_p.h
+    copyingexportpass_p.h
 
     This file is part of Kuesa.
 
@@ -26,12 +26,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KUESA_GLTF2IMPORT_GLTF2URI_P_H
-#define KUESA_GLTF2IMPORT_GLTF2URI_P_H
-
-#include <QString>
-#include <QDir>
-#include <Kuesa/private/kuesa_global_p.h>
+#ifndef KUESA_GLTF2EXPORTER_COPYINGEXPORTPASS_P_H
+#define KUESA_GLTF2EXPORTER_COPYINGEXPORTPASS_P_H
 
 //
 //  NOTICE
@@ -41,40 +37,29 @@
 // modified without notice
 //
 
+#include <QDir>
+#include <QStringList>
+#include <QJsonObject>
+
 QT_BEGIN_NAMESPACE
-
-class QString;
-class QDir;
-
 namespace Kuesa {
-namespace GLTF2Import {
-namespace Uri {
-enum class Kind {
-    Path,
-    Data
+
+class CopyExportPass
+{
+public:
+    CopyExportPass(
+            const QDir &source,
+            const QDir &destination);
+
+    void addGeneratedFiles(const QStringList &lst);
+    const QStringList &errors() const;
+    void copyURIs(QJsonObject &root, const QLatin1String &key);
+
+private:
+    QStringList m_errors;
+    QStringList m_generated;
+    QDir m_basePath, m_destination;
 };
-
-KUESA_PRIVATE_EXPORT
-Uri::Kind kind(const QString &uri);
-
-KUESA_PRIVATE_EXPORT
-QUrl absoluteUrl(const QString &uri, const QDir &basePath);
-
-KUESA_PRIVATE_EXPORT
-QString localFile(const QString &uri, const QDir &basePath);
-
-KUESA_PRIVATE_EXPORT
-QByteArray parseEmbeddedData(const QString &uri);
-
-KUESA_PRIVATE_EXPORT
-QByteArray toBase64Uri(const QByteArray &arr);
-
-KUESA_PRIVATE_EXPORT
-QByteArray fetchData(const QString &uri, const QDir &basePath, bool &success);
-} // namespace Uri
-} // namespace GLTF2Import
 } // namespace Kuesa
-
 QT_END_NAMESPACE
-
-#endif // KUESA_GLTF2IMPORT_GLTF2URI_P_H
+#endif // KUESA_GLTF2EXPORTER_COPYINGEXPORTPASS_P_H

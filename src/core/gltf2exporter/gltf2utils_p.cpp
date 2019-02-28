@@ -1,5 +1,5 @@
 /*
-    gltf2uri_p.h
+    gltf2utils_p.cpp
 
     This file is part of Kuesa.
 
@@ -26,55 +26,41 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KUESA_GLTF2IMPORT_GLTF2URI_P_H
-#define KUESA_GLTF2IMPORT_GLTF2URI_P_H
-
-#include <QString>
-#include <QDir>
-#include <Kuesa/private/kuesa_global_p.h>
-
-//
-//  NOTICE
-//  ------
-//
-// We mean it: this file is not part of the public API and could be
-// modified without notice
-//
+#include "gltf2utils_p.h"
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QLatin1String>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
-
-class QString;
-class QDir;
-
 namespace Kuesa {
-namespace GLTF2Import {
-namespace Uri {
-enum class Kind {
-    Path,
-    Data
-};
+/*!
+ * Add an extension to a glTF object if it is not already registered
+ */
+void addExtension(QJsonObject &object, const QString &where, const QString &extension)
+{
+    auto extensions = object[where].toArray();
+    auto ext_it = std::find_if(extensions.begin(), extensions.end(), [&](const QJsonValue &v) {
+        return v.toString() == extension;
+    });
 
-KUESA_PRIVATE_EXPORT
-Uri::Kind kind(const QString &uri);
+    if (ext_it == extensions.end()) {
+        extensions.push_back(extension);
+        object[where] = std::move(extensions);
+    }
+}
 
-KUESA_PRIVATE_EXPORT
-QUrl absoluteUrl(const QString &uri, const QDir &basePath);
+/*!
+ * Replace a Json array in an object, or remove it from the object if the array is empty.
+ */
+void replaceJsonArray(QJsonObject &object, const QLatin1String &k, QJsonArray &arr)
+{
+    auto it = object.find(k);
+    if (it != object.end() && arr.empty())
+        object.erase(it);
+    else if (!arr.empty())
+        *it = std::move(arr);
+}
 
-KUESA_PRIVATE_EXPORT
-QString localFile(const QString &uri, const QDir &basePath);
-
-KUESA_PRIVATE_EXPORT
-QByteArray parseEmbeddedData(const QString &uri);
-
-KUESA_PRIVATE_EXPORT
-QByteArray toBase64Uri(const QByteArray &arr);
-
-KUESA_PRIVATE_EXPORT
-QByteArray fetchData(const QString &uri, const QDir &basePath, bool &success);
-} // namespace Uri
-} // namespace GLTF2Import
 } // namespace Kuesa
-
 QT_END_NAMESPACE
-
-#endif // KUESA_GLTF2IMPORT_GLTF2URI_P_H

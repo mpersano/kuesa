@@ -216,7 +216,7 @@ template<typename T>
 bool compressAttribute(
         const Qt3DRender::QAttribute &attribute,
         draco::Mesh &dracoMesh,
-        std::vector<std::pair<QString, int>>& attributes)
+        std::vector<std::pair<QString, int>> &attributes)
 {
     auto compressedAttr = addAttributeToMesh<T>(attribute, dracoMesh);
     if (compressedAttr.second == -1) {
@@ -273,43 +273,44 @@ CompressedMesh compressMesh(
 
         switch (attribute->vertexBaseType()) {
         case Qt3DRender::QAttribute::VertexBaseType::Float: {
-            if(!compressAttribute<float>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<float>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::Byte: {
             static_assert(CHAR_MIN < 0, "This code only works on platforms with signed char");
-            if(!compressAttribute<qint8>(*attribute, dracoMesh, attributes))
+
+            if (!compressAttribute<qint8>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::UnsignedByte: {
-            if(!compressAttribute<quint8>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<quint8>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::Short: {
-            if(!compressAttribute<qint16>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<qint16>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::UnsignedShort: {
-            if(!compressAttribute<quint16>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<quint16>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::Int: {
-            if(!compressAttribute<qint32>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<qint32>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::UnsignedInt: {
-            if(!compressAttribute<quint32>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<quint32>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }
         case Qt3DRender::QAttribute::VertexBaseType::Double: {
-            if(!compressAttribute<double>(*attribute, dracoMesh, attributes))
+            if (!compressAttribute<double>(*attribute, dracoMesh, attributes))
                 return {};
             break;
         }

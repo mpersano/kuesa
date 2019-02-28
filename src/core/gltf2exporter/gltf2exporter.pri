@@ -27,15 +27,26 @@
 INCLUDEPATH += $$PWD
 
 SOURCES += \
-    $$PWD/gltf2exporter_p.cpp
+    $$PWD/copyexportpass_p.cpp \
+    $$PWD/embedexportpass_p.cpp \
+    $$PWD/gltf2exporter_p.cpp \
+    $$PWD/gltf2utils_p.cpp \
+    $$PWD/separateexportpass_p.cpp
 
 HEADERS += \
-    $$PWD/gltf2exporter_p.h
+    $$PWD/copyexportpass_p.h \
+    $$PWD/embedexportpass_p.h \
+    $$PWD/gltf2exporter_p.h \
+    $$PWD/gltf2utils_p.h \
+    $$PWD/separateexportpass_p.h
 
 qtConfig(draco) {
     SOURCES += \
-      $$PWD/dracocompressor_p.cpp
+      $$PWD/dracocompressor_p.cpp \
+      $$PWD/dracoexportpass_p.cpp
+
     HEADERS +=\
-      $$PWD/dracocompressor_p.h
+      $$PWD/dracocompressor_p.h \
+      $$PWD/dracoexportpass_p.h
 }
 
